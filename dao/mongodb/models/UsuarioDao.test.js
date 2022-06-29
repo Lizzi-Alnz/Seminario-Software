@@ -1,13 +1,13 @@
 const path = require('path');
 const dotenv = require('dotenv');
-const CategoriaDao = require('./CategoryDao');
+const CategoriaDao = require('./UsuarioDao');
 
 dotenv.config({ path: path.resolve(__dirname, '../../../.env') });
 
 const Connection = require('../Connection');
 const { hasUncaughtExceptionCaptureCallback } = require('process');
 
-describe("Testing Categoria Crud in MongoDB", () => {
+describe("Testing Usuario Crud in MongoDB", () => {
   const env = process.env;
   let db, CatDao, Cat, id;
   beforeAll(async () => {
@@ -15,11 +15,11 @@ describe("Testing Categoria Crud in MongoDB", () => {
     process.env = {
       ...env,
       MONGODB_URI: "mongodb+srv://lizzialnz:seminariotaller@mi-cluster1.65cl4kc.mongodb.net/test",
-      MONGODB_DB: "sw202202_test",
+      MONGODB_DB: "SW2022",
       MONGODB_SETUP: 1,
     };
     db = await Connection.getDB();
-    CatDao = new CategoriaDao(db,'categories');
+    CatDao = new CategoriaDao(db,'Usuarios');
     await CatDao.init();
     return true;
   });
@@ -32,7 +32,7 @@ describe("Testing Categoria Crud in MongoDB", () => {
     console.log(result);
   });
   test('Insert One Record', async ()=>{
-    const result = await CatDao.insertOne({ categoria:'Test INS', estado:'ACT'});
+    const result = await CatDao.insertOne({ email:'John Rivera',nombre:'John Rivera',avatar:'John Rivera',password:'John Rivera', estado:'ACT'});
     console.log(result);
     id = result.insertedId;
     expect(result.acknowledged).toBe(true);
@@ -43,7 +43,7 @@ describe("Testing Categoria Crud in MongoDB", () => {
     expect(record._id).toStrictEqual(id);
   });
   test('Update One Record', async ()=>{
-    const updateResult = await CatDao.updateOne({codigo:id.toString(), categoria:'TEST INS UPD', estado:'INA'});
+    const updateResult = await CatDao.updateOne({codigo:id.toString(), email:'John Rivera',nombre:'John Rivera',avatar:'John Rivera',password:'John Rivera', estado:'INA'});
     console.log(updateResult);
     expect(updateResult.acknowledged).toBe(true);
   });
