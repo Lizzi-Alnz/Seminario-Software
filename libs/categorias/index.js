@@ -1,6 +1,8 @@
 const DaoObject = require('../../dao/mongodb/DaoObject');
 module.exports = class Category {
   categoryDao = null;
+  categoriasMemStore = [];
+  categoriasCurrentKey = 0;
 
   constructor ( categoryDao = null) {
     if (!(categoryDao instanceof DaoObject)) {
@@ -63,9 +65,6 @@ module.exports = class Category {
   }
 }
 /*
-categoriasMemStore = [];
-categoriasCurrentKey = 0;
-
 module.exports.getCategoryVersion = async ()=>{
   return {
     entity:  'Categories',

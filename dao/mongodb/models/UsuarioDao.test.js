@@ -32,7 +32,7 @@ describe("Testing Usuario Crud in MongoDB", () => {
     console.log(result);
   });
   test('Insert One Record', async ()=>{
-    const result = await CatDao.insertOne({ email:'John Rivera',nombre:'John Rivera',avatar:'John Rivera',password:'John Rivera', estado:'ACT'});
+    const result = await CatDao.insertOne({ email:'Lizzi Silva',nombre:'Lizzi Silva',avatar:'Lizzi Silva',password:'Lizzi Silva', estado:'ACT'});
     console.log(result);
     id = result.insertedId;
     expect(result.acknowledged).toBe(true);
@@ -43,7 +43,7 @@ describe("Testing Usuario Crud in MongoDB", () => {
     expect(record._id).toStrictEqual(id);
   });
   test('Update One Record', async ()=>{
-    const updateResult = await CatDao.updateOne({codigo:id.toString(), email:'John Rivera',nombre:'John Rivera',avatar:'John Rivera',password:'John Rivera', estado:'INA'});
+    const updateResult = await CatDao.updateOne({codigo:id.toString(), email:'Lizzi Alonzo',nombre:'Lizzi Alonzo',avatar:'Lizzi Alonzo',password:'Lizzi Alonzo', estado:'INA'});
     console.log(updateResult);
     expect(updateResult.acknowledged).toBe(true);
   });

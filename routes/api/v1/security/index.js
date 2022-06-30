@@ -43,7 +43,7 @@ router.post('/signin', async (req, res) => {
     }
     const newUsuario = await user.addUsuarios({
       email,
-      nombre : 'John Doe',
+      nombre : 'Lizzi Doe',
       avatar: '',
       password,
       estado: 'ACT'

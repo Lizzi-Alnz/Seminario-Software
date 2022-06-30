@@ -10,13 +10,14 @@ describe("Testing Categoria Crud", () => {
     jest.resetModules();
     process.env = {
       ...env,
-      SQLITE_DB:"ochentaapp_test.db",
+      SQLITE_DB:"ochentaapp_cat_test.db",
       SQLITE_SETUP:1
     };
     db = await Conexion.getDB();
     CatDao = new CategoriaDao(db);
     Cat = new Categoria(CatDao);
     await Cat.init();
+
     await Cat.addCategory(
       { categoria: 'Categoria Prueba 1', estado: 'ACT' }
     );
@@ -26,12 +27,12 @@ describe("Testing Categoria Crud", () => {
     return true;
   });
 
-  afterAll(async ()=> {
-    //Remove testDB;
-    fs.unlinkSync(`data/${process.env.SQLITE_DB}`)
+  afterAll(async ()=>{
+    db.close();
+    fs.unlinkSync(`data/${process.env.SQLITE_DB}`);
+    process.env = env;
     return true;
-  }
-  );
+  });
 
   test('Category inserts Value', async ()=>{
     const result = await Cat.addCategory(
