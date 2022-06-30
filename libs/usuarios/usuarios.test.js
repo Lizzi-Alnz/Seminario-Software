@@ -20,13 +20,13 @@ describe('Testing Usuarios CRUD', ()=>{
     Usr = new Usuario(UsrDao);
     await Usr.init();
 
-    await Usr.addUsuarios(
+    await Usr.addUsuario(
       { email : "test1@prueba.com", nombre : "Test 1", avatar : "testAvatar1", password : "nondisclose1", estado : "ACT" }
     );
-    await Usr.addUsuarios(
+    await Usr.addUsuario(
       { email: "test2@prueba.com", nombre: "Test 2", avatar: "testAvatar2", password: "nondisclose2", estado: "ACT" }
     );
-    await Usr.addUsuarios(
+    await Usr.addUsuario(
       { email: "test3@prueba.com", nombre: "Test 3", avatar: "testAvatar3", password: "nondisclose3", estado: "ACT" }
     );
     return true;
@@ -39,7 +39,7 @@ describe('Testing Usuarios CRUD', ()=>{
   });
 
   test('Usuarios insertOne', async ()=>{
-    const result = await Usr.addUsuarios(
+    const result = await Usr.addUsuario(
       { email: "test3@prueba.com", nombre: "Test 3", avatar: "testAvatar3", password: "nondisclose3", estado: "ACT" }
     );
     expect(result.id).toBeGreaterThanOrEqual(1);
