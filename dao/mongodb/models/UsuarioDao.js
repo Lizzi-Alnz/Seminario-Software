@@ -57,4 +57,6 @@ module.exports = class UsuariosDao extends DaoObject {
     return super.updateOne(codigo, updateCommand);
   }
 
+  
+
 }

@@ -1,4 +1,5 @@
 const DaoObject = require('../../dao/mongodb/DaoObject');
+const bcrypt = require('bcryptjs');
 module.exports = class Usuario {
   usuarioDao = null;
 
@@ -20,29 +21,29 @@ module.exports = class Usuario {
     };
   }
 
-  async addUsuario({
+  async addUsuarios({
     email,
+    password,
     nombre,
     avatar,
-    password,
     estado
   }) {
     const result = await this.usuarioDao.insertOne(
       {
         email,
+        password: bcrypt.hashSync(password),
         nombre,
         avatar,
-        password,
         estado
       }
     );
     return {
       email,
+      password,
       nombre,
       avatar,
-      password,
       estado,
-      id: result.lastID
+      result,
     };
   };
 
@@ -54,28 +55,34 @@ module.exports = class Usuario {
     return this.usuarioDao.getById({ codigo });
   }
 
-  async updateUsuario({ email,
+  async getUsuarioByEmail({ email }) {
+    return this.usuarioDao.getByEmail({ email });
+  }
+
+  comparePasswords(rawPassword, dbPassword) {
+    return bcrypt.compareSync(rawPassword, dbPassword);
+  }
+
+  async updateUsuario({
     nombre,
     avatar,
     password,
     estado,
     codigo
-    }) {
+  }) {
     const result = await this.usuarioDao.updateOne({
       codigo,
-      email,
       nombre,
       avatar,
-      password,
-      estado });
+      password: bcrypt.hashSync(password),
+      estado
+    });
     return {
-      email,
       nombre,
       avatar,
-      password,
       estado,
       codigo,
-      modified: result.changes
+      modified: result
     }
   }
 
