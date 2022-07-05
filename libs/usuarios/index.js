@@ -63,6 +63,10 @@ module.exports = class Usuario {
     return bcrypt.compareSync(rawPassword, dbPassword);
   }
 
+  compareEmails(rawEmail, dbEmail) {
+    return bcrypt.compareSync(rawEmail, dbEmail);
+  }
+
   async updateUsuario({
     nombre,
     avatar,
@@ -79,9 +83,24 @@ module.exports = class Usuario {
     });
     return {
       nombre,
+      password,
       avatar,
       estado,
       codigo,
+      modified: result
+    }
+  }
+
+  async updateUsuarioPass({
+    password,
+    codigo
+  }) {
+    const result = await this.usuarioDao.updateUsuarioPass({
+      password: bcrypt.hashSync(password)
+    });
+    return {
+      codigo,
+      password,
       modified: result
     }
   }

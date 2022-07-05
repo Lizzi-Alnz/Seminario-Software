@@ -56,39 +56,78 @@ router.post('/signin', async (req, res) => {
   }
 });
 
-router.post('/sendemail', async (req, res) => {
+router.put('/sendemail', async (req, res) => {
   const { email } = req.body;
   if (/^\s*$/.test(email)) {
     return res.status(400).json({
       error: 'Se espera valor de correo'
     });
-  }
-  var transported = nodemailer.createTransport({
-    host: "smtp.ethereal.email",
-    post: 587,
-    secure: false,
-    auth: {
-      user: "g5a2t3f63svg2mhd@ethereal.email",
-      pass: "BTV86DS3vFDrHTJg2n",
-    },
-  });
-
-  var mailOptions = {
-    from: "Remitente",
-    to: email,
-    subject: "Enviando desde nodemailer",
-    text: "Tu nueva contraseña es: 123",
   };
 
-  transported.sendMail(mailOptions, (error, info) =>{
-    if(error){
-      res.status(500).send(error.message);
-    }else{
-      console.log("Email enviado");
-      res.status(200).json(req.body);
-    }
-  })
+  const userData = await user.getUsuarioByEmail({ email });
+  console.log(userData);
+
+  if (userData === null) {
+    console.error('password reset: ', { error: `El correo de no se encuentra registrado` });
+    return res.status(403).json({ "error": "El correo no se encuentra registrado" });
+  } else {
+    console.log("El correo de sí se encuentra registrado ☺");
+    const codigo = userData._id;
+    console.log("ID usuario: "+codigo);
+    var password = contrasenia();
+    console.log("Nueva contraseña: " + password);
+    const configurarCorreo = {
+      from: process.env.APP_CORREO,
+      to: email,
+      subject: "Recuperación de Contraseña",
+      text: 'Su contrasena temporal es:' + password +', Por favor cambiale inmediatamente al ingresar.',
+
+    };
+
+    const transporte = nodemailer.createTransport({
+      host: process.env.CORREO_SERVICIO,
+      port: process.env.CORREO_PORT,
+      secure: true,
+      auth:
+      {
+        user: process.env.APP_CORREO,
+        pass: process.env.CORREO_CONTRASENA,
+
+      },
+    });
+
+    transporte.verify(function (error, success) {
+      if (error) {
+        console.log("El servidor NO puede enviar mensajes");
+        console.log(error);
+        return false;
+      } else {
+        console.log("El servidor puede enviar mensajes ☺");
+      }
+    });
+
+    // try {
+    //   const updateResult = await user.updateUsuarioPass({ password, codigo });
+    //   if (!updateResult) { return res.status(404).json({ error: 'Usuario no encontrado.' }); } return res.status(200).json({ updateUsuarioPass: updateResult });
+    // } catch (ex) {
+    //   console.error(ex);
+    //   res.status(500).json({ error: 'Error al procesar solicitud.' });
+    // }
+
+    return transporte.sendMail(configurarCorreo, (error, info) => {
+      if (error) {
+        res.status(500).send(error.message);
+      } else {
+        console.log("Email enviado");
+        res.status(200).json(req.body);
+      }
+    });
+  }
 });
 
+function contrasenia() {
+  var contrasenia = Math.random().toString(36).slice(2) + Math.random().toString(36).toUpperCase().slice(2);
+  return contrasenia;
+}
 
 module.exports = router;

@@ -47,6 +47,16 @@ module.exports = class UsuariosDao extends DaoObject {
     return super.updateOne(codigo, updateCommand);
   }
 
+  updateOnePass({codigo, password}) {
+    const updateCommand = {
+      "$set": {
+        password,
+        updated: new Date().toISOString()
+      }
+    }
+    return super.updateOne(codigo, updateCommand);
+  }
+
   deleteOne({ codigo }) {
     const updateCommand = {
       "$set": {
@@ -57,6 +67,7 @@ module.exports = class UsuariosDao extends DaoObject {
     return super.updateOne(codigo, updateCommand);
   }
 
+  
   
 
 }
